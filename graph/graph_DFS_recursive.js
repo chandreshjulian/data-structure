@@ -44,8 +44,6 @@ class Graph {
   }
 }
 
-
-
 let g = new Graph();
 
 g.addVertex("A")
@@ -54,7 +52,6 @@ g.addVertex("C")
 g.addVertex("D")
 g.addVertex("E")
 g.addVertex("F")
-
 
 g.addEdge("A", "B")
 g.addEdge("A", "C")

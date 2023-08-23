@@ -85,8 +85,6 @@ class Graph {
   }
 }
 
-
-
 let g = new Graph();
 
 g.addVertex("A")
@@ -104,6 +102,8 @@ g.addEdge("C", "E")
 g.addEdge("D", "E")
 g.addEdge("D", "F")
 g.addEdge("E", "F")
+
+console.log(g)
 
 //          A
 //        /   \

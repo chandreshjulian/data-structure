@@ -37,9 +37,9 @@ class PriorityQueue {
 
   dequeue() {
     const handled = this.queue[0]
-    if(!this.queue.length)
+    if (!this.queue.length)
       return 'No Patient'
-    else if(this.queue.length === 1)
+    else if (this.queue.length === 1)
       this.queue.pop()
     else {
       this.queue[0] = this.queue.pop()
@@ -53,7 +53,7 @@ class PriorityQueue {
     const leftChildIndex = (2 * index) + 1 // to find left child
     const rightChildIndex = (2 * index) + 2 // to find right child
 
-    if(!this.queue[leftChildIndex] || !this.queue[rightChildIndex])
+    if (!this.queue[leftChildIndex] || !this.queue[rightChildIndex])
       return
 
     // if(!this.queue[rightChildIndex])
@@ -65,7 +65,7 @@ class PriorityQueue {
     const rightChildPriority = this.queue[rightChildIndex].priority
     let temp
 
-    if(leftChildPriority < rightChildPriority && leftChildPriority < elementPriority) {
+    if (leftChildPriority < rightChildPriority && leftChildPriority < elementPriority) {
       temp = this.queue[leftChildIndex]
       this.queue[leftChildIndex] = element
       this.queue[index] = temp
@@ -79,15 +79,15 @@ class PriorityQueue {
   }
 
   #bubbleUp(index) {
-    const parentIndex = Math.floor((index-1)/2) // to find the parent
+    const parentIndex = Math.floor((index - 1) / 2) // to find the parent
 
-    if(!this.queue[parentIndex])
+    if (!this.queue[parentIndex])
       return
 
     const childPriority = this.queue[index].priority
     const parentPriority = this.queue[parentIndex].priority
 
-    if(this.queue[parentIndex] && childPriority < parentPriority) { // less priority is higher
+    if (this.queue[parentIndex] && childPriority < parentPriority) { // less priority is higher
       const temp = this.queue[parentIndex]
       this.queue[parentIndex] = this.queue[index]
       this.queue[index] = temp
@@ -102,25 +102,25 @@ class WeightedGraph {
   }
 
   addVertex(vertex) {
-    if(!this.adjacencyList[vertex])
-    this.adjacencyList[vertex] = []
+    if (!this.adjacencyList[vertex])
+      this.adjacencyList[vertex] = []
   }
 
   addEdge(vertex1, vertex2, weight) {
-    this.adjacencyList[vertex1].push({ node: vertex2,  weight})
-    this.adjacencyList[vertex2].push({ node: vertex1,  weight})
+    this.adjacencyList[vertex1].push({ node: vertex2, weight })
+    this.adjacencyList[vertex2].push({ node: vertex1, weight })
   }
 
   dijkstra(start, end) {
-    const nodes = new PriorityQueue()
+    const nodes = new NaivePriorityQueue()
     const distances = {}
     const previous = {}
     const path = []
     let smallest = null
 
     // building initial state
-    for(let vertex in this.adjacencyList) {
-      if(vertex === start) {
+    for (let vertex in this.adjacencyList) {
+      if (vertex === start) {
         distances[vertex] = 0
         nodes.enqueue(vertex, 0)
       }
@@ -133,25 +133,33 @@ class WeightedGraph {
 
     console.log(nodes)
 
-    while(nodes.queue.length) {
+    while (nodes.queue.length) {
       smallest = nodes.dequeue().val
-      if(smallest === end) {
-        while(previous[smallest]) {
+
+      if (smallest === end) {
+        // building the path
+        while (previous[smallest]) {
           path.push(smallest)
+          // console.log(path)
           smallest = previous[smallest]
         }
         break
       }
 
-      if(smallest || distances[smallest] !== Infinity) {
+      if (smallest || distances[smallest] !== Infinity) {
+        console.log(smallest)
         this.adjacencyList[smallest].forEach(neighbor => {
           let candidate = distances[smallest] + neighbor.weight
-          if(candidate < distances[neighbor.node]) {
+          console.log(candidate, distances[neighbor.node], neighbor)
+          if (candidate < distances[neighbor.node]) {
             distances[neighbor.node] = candidate
             previous[neighbor.node] = smallest
             nodes.enqueue(neighbor.node, candidate)
           }
         });
+        console.log(previous)
+        console.log(distances)
+        // console.log(nodes)
       }
     }
 
@@ -177,6 +185,6 @@ graph.addEdge("C", "F", 4)
 graph.addEdge("E", "F", 1)
 graph.addEdge("D", "F", 1)
 
-console.log(graph)
+console.log(JSON.stringify(graph))
 
 console.log(graph.dijkstra("A", "E"))
